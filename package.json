@@ -1,0 +1,41 @@
+{
+  "name": "h4starter",
+  "version": "1.0.0",
+  "description": "Starter Kit for Node.js GRPC Server",
+  "repository": {
+    "type": "git",
+    "url": "https://git.hackin4.de/develop/h4starter"
+  },
+  "license": "MIT",
+  "author": "Oliver Wycisk",
+  "contributors": [
+    "Oliver Wycisk"
+  ],
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "nyc mocha --timeout=10000 --exit",
+    "lint": "eslint \"**/*.js\"",
+    "serve": "nyc nodemon src/app.js"
+  },
+  "dependencies": {
+    "@grpc/proto-loader": "^0.5.0",
+    "awilix": "^4.2.2",
+    "chalk": "^2.4.2",
+    "config": "^3.1.0",
+    "dotenv": "^8.0.0",
+    "grpc": "^1.20.3",
+    "lodash": "^4.17.11",
+    "mali": "^0.14.0",
+    "mongoose": "^5.5.6"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "mocha": "^6.1.4",
+    "nodemon": "^1.19.0",
+    "nyc": "^14.1.0"
+  },
+  "engines": {
+    "node": ">=8.11.3",
+    "npm": ">=5.6.0"
+  }
+}
