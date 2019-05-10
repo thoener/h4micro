@@ -21,13 +21,11 @@ module.exports = class App extends Emittery {
     super()
     // Set the base_path
     this.base_path = (base_path == null || base_path !== base_path) ?
-      base_path : path.resolve(__dirname, '..')
+      path.resolve(__dirname, './..') :
+      base_path
 
     // Init the application
     this.init()
-
-    // register service providers
-    this.registerServiceProviders()
   }
 
   /**
@@ -60,6 +58,12 @@ module.exports = class App extends Emittery {
     this.container.register('config', awilix.asValue(this.config))
     this.container.register('app', awilix.asValue(this))
     this.container.register('awilix', awilix.asValue(awilix))
+    this.container.register('path', awilix.asValue(path))
+
+    /**
+     * Scan all service providers
+     */
+    this.scanServiceProviders()
   }
 
   /**
@@ -67,6 +71,8 @@ module.exports = class App extends Emittery {
    * @returns {Promise<void>}
    */
   async run() {
+    this.registerServiceProviders()
+
     try {
       console.log('Registering')
       await this.emit(REGISTER_EVENT, [this])
@@ -92,7 +98,7 @@ module.exports = class App extends Emittery {
   /**
    * Register all Service Providers
    */
-  registerServiceProviders() {
+  scanServiceProviders() {
     // get provider path
     let providersPath = path.resolve(this.base_path, 'providers')
 
@@ -103,6 +109,13 @@ module.exports = class App extends Emittery {
       const ProviderClass = require(providerFile)
       // Create an instance
       let provider = new ProviderClass(this)
+      // Push providers to our stack
+      this.providers.push(provider)
+    })
+  }
+
+  registerServiceProviders(){
+    this.providers.forEach((provider) => {
       // Push functions to emitter
       this.on(REGISTER_EVENT, (data) => provider.register(data))
       this.on(BOOT_EVENT, (data) => provider.boot(data))
@@ -110,10 +123,21 @@ module.exports = class App extends Emittery {
       this.on(READY_EVENT, (data) => provider.ready(data))
       this.on(CLOSE_EVENT, (data) => provider.close(data))
       this.on(ERROR_EVENT, (data) => provider.error(data))
-      // Push providers to our stack
-      this.providers.push(provider)
     })
   }
+
+  /*
+  Helpful functions
+   */
+
+  resolve(...args) {
+    return this.container.resolve(...args)
+  }
+
+  register(...args) {
+    return this.container.register(...args)
+  }
+
 
   /*
    * Constant getters

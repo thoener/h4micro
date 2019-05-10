@@ -54,4 +54,17 @@ module.exports = class ServiceProvider {
   async error() {
 
   }
+
+  /*
+  Some helpful functions
+   */
+
+  /**
+   * Resolve something from the application
+   * @param args
+   * @returns {*}
+   */
+  resolve(...args) {
+    return this.app.resolve(...args)
+  }
 }

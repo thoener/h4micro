@@ -1,5 +1,16 @@
 # hacking4 Node.js GRPC Framework
 
+## Getting started
+
+### Installation
+
+### Configuration
+
+### Yarn commands
+
+### Add a new proto service
+
+### Add express appTest
 
 
 ## Architecture Concepts
@@ -28,10 +39,10 @@ have all needed lifecycle methods which are called in the specific state:
 ```javascript
 const ServiceProvider = require('./ServiceProvider')
 
-module.exports = class AppServiceProvider extends ServiceProvider {
+module.exports = class ExampleServiceProvider extends ServiceProvider {
     async register() {
       // You can access the application with
-      let config = this.app.container.resolve('config')
+      let config = this.appTest.container.resolve('config')
     }
     async boot() {}
     async start() {}
@@ -43,31 +54,18 @@ module.exports = class AppServiceProvider extends ServiceProvider {
 
 ### Default Services
 
+By default there are the following services in the container:
+
+* `config`
+* `appTest`
+* `mali`
+* `chalk`
+* `awilix`
 
 
-## Getting started
-Describe how to
-* add a new ServiceProvider
-* add a new GRPC service
-* use dependency injection
 
-### Config
-
-The node-config package is used to easily access config.
-
-```javascript
-let appConfig = config.get('app')
-```
+## Usage
 
 ### Dependency Injection
 
-By default there are the following injections:
-* `config`
-* `app`
-* `mali`
-* `chalk`
-* `awilix` - yep. You can inject the service which provides dependency injection
-* 
-
-
-# The App Object
+## 
