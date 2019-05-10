@@ -3,14 +3,14 @@ const Application = require('./bootstap/app')
 // create Application
 let app = new Application(__dirname)
 
-// Start it!
-Promise.all([app.start()])
-  .then(() => {
-    console.log('Application is running')
-  })
-  .catch((err) => {
-    console.log('Could not start application.')
-    console.error(err)
-  })
+;(async () => {
+  await Promise.all([app.run()])
+})()
 
+/**
+ * Using this:
+ * let app = require('./app')
+ * app.on('ready', (app) =>  {})
+ * @type {module.App|*}
+ */
 module.exports = app

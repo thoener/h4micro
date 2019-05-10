@@ -10,23 +10,48 @@ module.exports = class ServiceProvider {
 
   /**
    * Register application services
+   * @returns {Promise<void>}
    */
-  register() {
+  async register() {
   }
 
   /**
    * Boot application services
+   * @returns {Promise<void>}
    */
-  boot() {
+  async boot() {
 
   }
 
   /**
-   * Register a function which be called after the boot process
-   *
-   * @param callback
+   * Starting the services
+   * @returns {Promise<void>}
    */
-  registerStartFunction(callback){
-    this.app.startFunctions.push(callback)
+  async start() {
+
+  }
+
+  /**
+   * Application is ready
+   * @returns {Promise<void>}
+   */
+  async ready() {
+
+  }
+
+  /**
+   * Application is shutting down
+   * @returns {Promise<void>}
+   */
+  async close() {
+
+  }
+
+  /**
+   * Applications has an error
+   * @returns {Promise<void>}
+   */
+  async error() {
+
   }
 }

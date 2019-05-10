@@ -1,31 +1,26 @@
 const ServiceProvider = require('./ServiceProvider')
 const Mali = require('mali')
-const {asFunction} = require('awilix')
 
-module.exports = class AppServiceProvider extends ServiceProvider {
+module.exports = class MaliServiceProvider extends ServiceProvider {
 
-  register() {
-    let mali = () => {
-      return new Mali()
-    }
-    // Register Mali
-    this.app.container.register('mali', asFunction(mali).singleton())
-
-    // bind app to context
-    mali = this.app.container.resolve('mali')
+  async register() {
+    console.log('Registering MaliServiceProvider')
+    let mali = new Mali()
     mali.context.app = this.app
-
-    // register start function
-    this.registerStartFunction(this.start.bind(this))
+    let awilix = this.app.container.resolve('awilix')
+    // Register Mali
+    this.app.container.register('mali', awilix.asValue(mali))
   }
 
-  boot() {
+  async boot() {
+    console.log('Booting MaliServiceProvider')
     let mali = this.app.container.resolve('mali')
 
     let appName = mali.context.app.config.get('app.name')
   }
 
   async start() {
+    console.log('Starting MaliServiceProvider')
     /**
      * Start GRPC server.
      */

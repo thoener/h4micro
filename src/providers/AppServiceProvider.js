@@ -5,7 +5,8 @@ const chalk = require('chalk')
 
 module.exports = class AppServiceProvider extends ServiceProvider {
 
-  register() {
+  async register() {
+    console.log('Registering AppServiceProvider')
     // resolve awilix
     this.awilix = this.app.container.resolve('awilix')
 
@@ -16,8 +17,8 @@ module.exports = class AppServiceProvider extends ServiceProvider {
 
   }
 
-  boot() {
-
+  async boot() {
+    console.log('Booting AppServiceProvider')
   }
 
   registerModels() {
@@ -34,5 +35,9 @@ module.exports = class AppServiceProvider extends ServiceProvider {
         },
       ],
     ])
+  }
+
+  async start(){
+    console.log('Starting AppServiceProvider')
   }
 }
