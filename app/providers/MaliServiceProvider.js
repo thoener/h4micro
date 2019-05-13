@@ -15,8 +15,6 @@ module.exports = class MaliServiceProvider extends ServiceProvider {
   async boot() {
     console.log('Booting MaliServiceProvider')
     let mali = this.app.container.resolve('mali')
-
-    let appName = mali.context.app.config.get('app.name')
   }
 
   async start() {
@@ -24,9 +22,9 @@ module.exports = class MaliServiceProvider extends ServiceProvider {
     /**
      * Start GRPC server.
      */
-    let mali = this.app.container.resolve('mali')
-    let config = this.app.container.resolve('config')
-    let chalk = this.app.container.resolve('chalk')
+    let mali = this.resolve('mali')
+    let config = this.resolve('config')
+    let chalk = this.resolve('chalk')
 
     await mali.start(config.get('app.url') + ':' + config.get('app.port'))
 

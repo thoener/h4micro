@@ -1,7 +1,8 @@
-const Application = require('./bootstap/app')
+const Application = require('./bootstap/Application')
+const path = require('path')
 
 // create Application
-let app = new Application(__dirname)
+let app = new Application(path.resolve(__dirname, '..'))
 
 ;(async () => {
   await Promise.all([app.run()])

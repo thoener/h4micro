@@ -10,15 +10,14 @@ module.exports = class RpcRouteServiceProvider extends ServiceProvider {
   }
 
   registerExample(){
-    let protoPath = this.path.resolve(__dirname, '../protos', 'Example.proto')
+    let protoPath = this.path.resolve(this.app.base_path, 'app/protos', 'Example.proto')
 
     this.mali.addService(protoPath, 'Greeter')
 
     let ExampleController = this.resolve('ExampleController')
 
     this.mali.use('Greeter', 'sayHello', (ctx) => ExampleController.sayHello(ctx))
-    // this.mali.use('Greeter', 'sayHi', (ctx) => ExampleController.sayHi(ctx))
-
+    this.mali.use('Greeter', 'sayHi', (ctx) => ExampleController.sayHi(ctx))
   }
 
 }

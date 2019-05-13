@@ -1,4 +1,4 @@
-const awilix = require('awilix')
+const awilix = require('awilix/lib/awilix')
 const dotenv = require('dotenv')
 const path = require('path')
 const fs = require('fs')
@@ -20,9 +20,7 @@ module.exports = class App extends Emittery {
   constructor(base_path) {
     super()
     // Set the base_path
-    this.base_path = (base_path == null || base_path !== base_path) ?
-      path.resolve(__dirname, './..') :
-      base_path
+    this.base_path = this.resolveBasePath(base_path)
 
     // Init the application
     this.init()
@@ -45,7 +43,7 @@ module.exports = class App extends Emittery {
     /**
      * Load environment variables from .env file, where API keys and passwords are configured.
      */
-    dotenv.config({path: '.env'})
+    let result = dotenv.config({path: path.resolve(this.base_path, '.env')})
 
     /**
      * Load configuration
@@ -55,7 +53,7 @@ module.exports = class App extends Emittery {
     /**
      * Bind essential services to container
      */
-    this.container.register('config', awilix.asValue(this.config))
+    this. container.register('config', awilix.asValue(this.config))
     this.container.register('app', awilix.asValue(this))
     this.container.register('awilix', awilix.asValue(awilix))
     this.container.register('path', awilix.asValue(path))
@@ -100,7 +98,7 @@ module.exports = class App extends Emittery {
    */
   scanServiceProviders() {
     // get provider path
-    let providersPath = path.resolve(this.base_path, 'providers')
+    let providersPath = path.resolve(this.base_path, 'app', 'providers')
 
     // Scan for providers
     fs.readdirSync(providersPath).forEach(file => {
@@ -114,7 +112,7 @@ module.exports = class App extends Emittery {
     })
   }
 
-  registerServiceProviders(){
+  registerServiceProviders() {
     this.providers.forEach((provider) => {
       // Push functions to emitter
       this.on(REGISTER_EVENT, (data) => provider.register(data))
@@ -138,6 +136,11 @@ module.exports = class App extends Emittery {
     return this.container.register(...args)
   }
 
+  resolveBasePath(base_path){
+    return (base_path == null || base_path !== base_path) ?
+      path.resolve(__dirname, '../../') :
+      base_path
+  }
 
   /*
    * Constant getters

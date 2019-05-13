@@ -1,6 +1,5 @@
 const ServiceProvider = require('./ServiceProvider')
 const path = require('path')
-const {asValue, Lifetime} = require('awilix')
 const chalk = require('chalk')
 
 module.exports = class AppServiceProvider extends ServiceProvider {
@@ -8,14 +7,14 @@ module.exports = class AppServiceProvider extends ServiceProvider {
   async register() {
     console.log('Registering AppServiceProvider')
     // resolve awilix
-    this.awilix = this.app.container.resolve('awilix')
+    this.awilix = this.resolve('awilix')
 
     this.registerModels()
     this.registerServices()
     this.registerControllers()
 
     // push chalk to container
-    this.app.container.register('chalk', this.awilix.asValue(chalk))
+    this.app.register('chalk', this.awilix.asValue(chalk))
 
   }
 
@@ -26,7 +25,7 @@ module.exports = class AppServiceProvider extends ServiceProvider {
   registerModels() {
 
     // register all models
-    let modelsPath = path.resolve(this.app.base_path, 'models', '*.js')
+    let modelsPath = path.resolve(this.app.base_path, 'app/models', '*.js')
 
     this.app.container.loadModules([
       [
@@ -40,7 +39,7 @@ module.exports = class AppServiceProvider extends ServiceProvider {
   }
 
   registerControllers() {
-    let controllersPath = path.resolve(this.app.base_path, 'controllers',
+    let controllersPath = path.resolve(this.app.base_path, 'app/controllers',
       '*.js')
     this.app.container.loadModules([
       controllersPath,
@@ -52,7 +51,7 @@ module.exports = class AppServiceProvider extends ServiceProvider {
   }
 
   registerServices() {
-    let servicesPath = path.resolve(this.app.base_path, 'services', '*.js')
+    let servicesPath = path.resolve(this.app.base_path, 'app/services', '*.js')
     this.app.container.loadModules([
       servicesPath,
     ], {
