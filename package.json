@@ -6,6 +6,7 @@
     "type": "git",
     "url": "https://git.hackin4.de/develop/h4starter"
   },
+  "license": "BSD-3-Clause",
   "author": "Oliver Wycisk",
   "contributors": [
     "Oliver Wycisk <oliver.wycisk@gmail.com>"
@@ -24,13 +25,10 @@
     "dotenv": "^8.0.0",
     "emittery": "^0.4.1",
     "grpc": "^1.20.3",
-    "mali": "^0.15.0",
-    "mongoose": "^5.5.6"
+    "mali": "^0.15.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^5.16.0",
-    "grpc-caller": "^0.11.0",
     "mocha": "^6.1.4",
     "nodemon": "^1.19.0",
     "nyc": "^14.1.1",
