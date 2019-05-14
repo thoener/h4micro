@@ -1,15 +1,13 @@
-const Application = require('../../../../app/bootstap/Application')
-const awilix = require('awilix/lib/awilix')
-const AwilixContainer = require('awilix/lib/container')
+const utils = require('../../../utils')
+const Application = utils.Application
+const createApplication = utils.createApplication
+const mock_path = utils.mock_path
+const project_path = utils.project_path
+
+const awilix = require('awilix')
+const sinon = require('sinon')
 const path = require('path')
 const expect = require('chai').expect
-
-const project_path = path.resolve(__dirname, '../../../../')
-const mock_path = path.resolve(__dirname, '../../../mock')
-
-function createApplication() {
-  return new Application(mock_path)
-}
 
 describe('Application', () => {
 
@@ -17,17 +15,25 @@ describe('Application', () => {
     // Clear all setted .env files
     const dotenv = require('dotenv')
     const fs = require('fs')
-    let envConfig = dotenv.parse(fs.readFileSync(path.resolve(mock_path, '.env')))
-    for(let k in envConfig){
+    let envConfig = dotenv.parse(
+      fs.readFileSync(path.resolve(mock_path, '.env')))
+    for (let k in envConfig) {
       delete process.env[k]
     }
   })
 
+  afterEach(() => {
+    sinon.restore()
+  })
+
   it('creates application without base_path', () => {
     let App = require('../../../../app/bootstap/Application')
-    App.prototype.resolveBasePath = () => mock_path
+    sinon.stub(App, 'resolveBasePath').callsFake(() => {
+      return mock_path
+    })
+
     let app = new App()
-    expect(app).to.be.instanceof(Application)
+    expect(app).to.be.instanceof(App)
     expect(app.base_path).to.be.equal(mock_path)
   })
 
@@ -69,17 +75,6 @@ describe('Application', () => {
     })
     expect(instancesOfExampleServiceProvider).to.be.equal(1)
   })
-
-  it('should call register lifecycle hook', (done) => {
-    const ServiceProvider = require('../../../../app/providers/ServiceProvider')
-    let provider = new ServiceProvider()
-    provider.register = async () => { done(false) }
-
-    let app = createApplication()
-    app.providers.push(provider)
-    app.run().then()
-  })
-
   it('should load dotenv values', () => {
     let app = createApplication()
     expect(process.env.APP_NAME).to.be.eq('test')
@@ -90,15 +85,124 @@ describe('Application', () => {
     expect(app.config.app.test).to.be.eq('test')
   })
 
-  it('resolves from container', () => {
+  it('should have registered config', () => {
+    let app = createApplication()
+    expect(app.resolve('config')).to.be.eq(app.config)
+  })
+
+  it('should have registered app', () => {
+    let app = createApplication()
+    expect(app.resolve('app')).to.be.eq(app)
+  })
+
+  it('should have registered awilix', () => {
+    let app = createApplication()
+    expect(app.resolve('awilix').prototype)
+      .to.be.eq(awilix.createContainer().prototype)
+  })
+
+  it('should have registered path', () => {
+    let app = createApplication()
+    expect(app.resolve('path')).to.be.eq(path)
+  })
+
+  it('should call register lifecycle hook', (done) => {
+    let app = createApplication()
+    let provider = mockProviderWithHook('register', done)
+    app.providers.push(provider)
+    app.run().then()
+  })
+
+  it('should call boot lifecycle hook', (done) => {
+    let app = createApplication()
+    let provider = mockProviderWithHook('boot', done)
+    app.providers.push(provider)
+    app.run().then()
+  })
+
+  it('should call start lifecycle hook', (done) => {
+    let app = createApplication()
+    let provider = mockProviderWithHook('start', done)
+    app.providers.push(provider)
+    app.run().then()
+  })
+
+  it('should call ready lifecycle hook', (done) => {
+    let app = createApplication()
+    let provider = mockProviderWithHook('ready', done)
+    app.providers.push(provider)
+    app.run().then()
+  })
+
+  it('should call error lifecycle hook on error', (done) => {
+    let app = createApplication()
+    let provider = mockProviderWithHook('error', done)
+    provider.ready = async () => {
+      throw new Error('Test error')
+    }
+
+    app.providers.push(provider)
+    app.run().then()
+  })
+
+  it('should call close lifecycle hook after error', (done) => {
+    let app = createApplication()
+    let provider = mockProviderWithHook('close', done)
+    provider.ready = async () => {
+      throw new Error('Test error')
+    }
+
+    app.providers.push(provider)
+    app.run().then()
+  })
+
+  function mockProviderWithHook(hook, done) {
+    const ServiceProvider = require('../../../../app/providers/ServiceProvider')
+    let provider = new ServiceProvider()
+    provider[hook] = async () => {
+      done(false)
+    }
+    return provider
+  }
+
+  it('should resolve from container', () => {
     let app = createApplication()
     app.container.register('testing.js', awilix.asValue(123))
     expect(app.resolve('testing.js')).to.be.equal(123)
   })
 
-  it('can register new services', () => {
+  it('should register new services', () => {
     let app = createApplication()
     app.register('testing.js', awilix.asValue(123))
     expect(app.container.resolve('testing.js')).to.be.equal(123)
+  })
+
+  it('should resolve the base path', () => {
+    let app_path = Application.resolveBasePath()
+    expect(app_path).to.be.eq(path.resolve(project_path))
+  })
+
+  it('should return register event name', () => {
+    expect(Application.REGISTER_EVENT).to.be.eq('register')
+  })
+
+  it('should return boot event name', () => {
+    expect(Application.BOOT_EVENT).to.be.eq('boot')
+  })
+
+  it('should return start event name', () => {
+    expect(Application.START_EVENT).to.be.eq('start')
+  })
+
+  it('should return ready event name', () => {
+    expect(Application.READY_EVENT).to.be.eq('ready')
+  })
+
+  it('should return close event name', () => {
+    expect(Application.CLOSE_EVENT).to.be.eq('close')
+  })
+
+  it('should return error event name', () => {
+    expect(Application.ERROR_EVENT).to.be.eq('error')
   })
 })

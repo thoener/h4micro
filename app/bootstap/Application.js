@@ -11,7 +11,7 @@ const CLOSE_EVENT = 'close'
 const ERROR_EVENT = 'error'
 const READY_EVENT = 'ready'
 
-module.exports = class App extends Emittery {
+module.exports = class Application extends Emittery {
 
   /**
    *
@@ -20,7 +20,7 @@ module.exports = class App extends Emittery {
   constructor(base_path) {
     super()
     // Set the base_path
-    this.base_path = this.resolveBasePath(base_path)
+    this.base_path = Application.resolveBasePath(base_path)
 
     // Init the application
     this.init()
@@ -53,7 +53,7 @@ module.exports = class App extends Emittery {
     /**
      * Bind essential services to container
      */
-    this. container.register('config', awilix.asValue(this.config))
+    this.container.register('config', awilix.asValue(this.config))
     this.container.register('app', awilix.asValue(this))
     this.container.register('awilix', awilix.asValue(awilix))
     this.container.register('path', awilix.asValue(path))
@@ -136,7 +136,7 @@ module.exports = class App extends Emittery {
     return this.container.register(...args)
   }
 
-  resolveBasePath(base_path){
+  static resolveBasePath(base_path) {
     return (base_path == null || base_path !== base_path) ?
       path.resolve(__dirname, '../../') :
       base_path
