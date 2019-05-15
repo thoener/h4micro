@@ -2,13 +2,13 @@
 
 Starter Kit for Node.js Microservices. Includes easy to use GRPC.
 
-The kit is used primary for Nodejs Microservices which using GRPC for communication.
+The kit is used primary for Node.js Microservices which using GRPC for communication.
 It is designed to be developer friendly and easy to use and easy to understand. But of course also as micro as it can be.
 
 This kit gives you a well defined folder structure and architecture, so you can concentrate on what matters: Your microservice.
 
 Frameworks like GRPC and Mali are great! But they don't provide an idea where to put your code. 
-And you will ending up fast in something, that is not maintainable.
+And you will ending up with something, that is not maintainable.
 This kit solves the problem!
 
 ## Getting started
@@ -112,19 +112,10 @@ In this section I will describe the minimal architecture concepts.
 * config - This is where all your configuration stuff happens
 * test - Here are your tests
 
-### Application Lifecycle
-1. Registering
-2. Booting
-3. Starting
-4. Ready
-5. Close
-6. Error
-
 ### Service Container
 
 This Kit  is using `awilix` as a Service Container for IoC.
 
-To register a new service 
 More Docs coming soon...
 
 ### Service Providers
@@ -148,6 +139,14 @@ module.exports = class ExampleServiceProvider extends ServiceProvider {
     async error() {}
 }
 ```
+
+### Application Lifecycle
+1. Registering
+2. Booting
+3. Starting
+4. Ready
+5. Close
+6. Error
 
 ### Default Services
 
