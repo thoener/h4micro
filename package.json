@@ -1,10 +1,10 @@
 {
-  "name": "h4starter",
+  "name": "h4micro",
   "version": "0.1.0",
   "description": "Starter Kit for Node.js GRPC Server",
   "repository": {
     "type": "git",
-    "url": "https://git.hackin4.de/develop/h4starter"
+    "url": "https://github.com/hacking4/h4micro"
   },
   "license": "BSD-3-Clause",
   "author": "Oliver Wycisk",
@@ -13,9 +13,8 @@
   ],
   "scripts": {
     "start": "node index.js",
-    "test": "./node_modules/.bin/mocha --timeout=10000 --exit --recursive ./test/**/*.test.js",
-    "lint": "eslint \"**/*.js\"",
-    "mon": "./node_modules/.bin/nodemon index.js"
+    "test": " ./node_modules/.bin/nyc ./node_modules/.bin/mocha --timeout=10000 --exit --recursive ./test/**/*.test.js",
+    "serve": "./node_modules/.bin/nodemon index.js"
   },
   "dependencies": {
     "@grpc/proto-loader": "^0.5.0",

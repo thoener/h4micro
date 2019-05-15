@@ -1,3 +1,9 @@
+# NOTE
+This is copied from the node-config wiki:
+
+[See here](https://github.com/lorenwest/node-config/wiki/Configuration-Files)
+
+
 # Configuration
 
 The configuration is handled by the NPM package config.

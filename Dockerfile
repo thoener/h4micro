@@ -1,15 +1,19 @@
-FROM node:10.15.3
+FROM node:8
 
-WORKDIR /appTest
+WORKDIR /h4micro
 ENV NODE_ENV production
 
 COPY package.json yarn.lock ./
 
 RUN yarn --production
 
-COPY .env.example /appTest/.env
+COPY .env.example /h4micro/.env
 COPY . .
+COPY --chown=node:node . .
 
-CMD ["yarn","run", "start"]
+USER node
+
+ENTRYPOINT ["yarn"]
+CMD ["run", "start"]
 
 EXPOSE 50051
